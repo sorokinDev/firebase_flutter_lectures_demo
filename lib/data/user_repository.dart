@@ -12,6 +12,8 @@ class UserRepository {
   bool get isAuthorized => _firebaseAuth.currentUser != null;
   User? get user => _firebaseAuth.currentUser;
 
+  Stream<User?> get userStream => _firebaseAuth.userChanges();
+
   Future<void> signInAnonymously() async {
     await _firebaseAuth.signInAnonymously();
   }
