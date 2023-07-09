@@ -13,6 +13,8 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   get_it: ^7.6.0
+  firebase_core: ^2.14.0
+  logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:
