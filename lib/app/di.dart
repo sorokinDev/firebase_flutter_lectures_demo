@@ -1,4 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
@@ -11,6 +13,7 @@ abstract class Locator {
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
     await _initFirebase();
+    _initCrashlytics();
   }
 
   static Future<void> _initFirebase() async {
@@ -21,6 +24,24 @@ abstract class Locator {
     );
 
     logger.d('Firebase initialized');
+  }
+
+  static void _initCrashlytics() {
+    FlutterError.onError = (errorDetails) {
+      logger.d('Caught error in FlutterError.onError');
+      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
+    };
+
+    PlatformDispatcher.instance.onError = (error, stack) {
+      logger.d('Caught error in PlatformDispatcher.onError');
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stack,
+        fatal: true,
+      );
+      return true;
+    };
+    logger.d('Crashlytics initialized');
   }
 
   static Future<void> dispose() async {}
