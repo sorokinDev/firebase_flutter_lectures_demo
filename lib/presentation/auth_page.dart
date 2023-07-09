@@ -1,3 +1,4 @@
+import 'package:firebase_lectures/app/di.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatelessWidget {
@@ -17,6 +18,18 @@ class AuthPage extends StatelessWidget {
                 throw Exception('Crashlytics test');
               },
               child: const Text('Crash me'),
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                Locator.analytics.logEvent(
+                  name: 'test_event',
+                  parameters: {
+                    'foo': 'bar',
+                  },
+                );
+              },
+              child: const Text('Send analytics event'),
             ),
           ],
         ),
