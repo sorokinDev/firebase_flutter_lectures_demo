@@ -25,7 +25,7 @@ class LecturesRepository {
     //   await _lecturesCollectionRef.add(lecture);
     // }
 
-    // _firestore.runTransaction((transaction) async {
+    // await _firestore.runTransaction((transaction) async {
     //   for (final lecture in lecturesPrefilingData) {
     //     transaction.set(_lecturesCollectionRef.doc(), lecture);
     //   }
@@ -38,5 +38,15 @@ class LecturesRepository {
     await batch.commit();
 
     logger.d('Filled Database');
+  }
+
+  Future<void> clearDatabase() async {
+    final lecturesSnapshot = await _lecturesCollectionRef.get();
+    await _firestore.runTransaction((transaction) async {
+      for (final doc in lecturesSnapshot.docs) {
+        transaction.delete(doc.reference);
+      }
+    });
+    logger.d('Cleared Database');
   }
 }
