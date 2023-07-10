@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_lectures/data/lecture_repository.dart';
 import 'package:firebase_lectures/data/user_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -16,6 +18,8 @@ abstract class Locator {
   static FirebaseAnalytics get analytics => FirebaseAnalytics.instance;
 
   static UserRepository get userRepository => _locator<UserRepository>();
+  static LecturesRepository get lecturesRepository =>
+      _locator<LecturesRepository>();
 
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -23,9 +27,18 @@ abstract class Locator {
     _initCrashlytics();
 
     _locator.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+    _locator.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance,
+    );
+
     _locator.registerSingleton<UserRepository>(
       UserRepository(
         _locator<FirebaseAuth>(),
+      ),
+    );
+    _locator.registerSingleton<LecturesRepository>(
+      LecturesRepository(
+        _locator<FirebaseFirestore>(),
       ),
     );
   }
