@@ -13,19 +13,21 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   final userRepository = Locator.userRepository;
+  final configRepository = Locator.configRepository;
 
   @override
   Widget build(BuildContext context) {
     final isAuthorized = userRepository.isAuthorized;
     logger.d('User authorized: $isAuthorized');
 
+    final useDarkTheme = configRepository.useDarkTheme;
+
     return MaterialApp(
       initialRoute: isAuthorized ? AppRoutes.lectures : AppRoutes.auth,
       routes: AppRoutes.routes,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        useMaterial3: true,
-      ),
+      themeMode: useDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      theme: ThemeData.light(useMaterial3: true),
+      darkTheme: ThemeData.dark(useMaterial3: true),
     );
   }
 
